@@ -33,10 +33,11 @@ def comment():
     
     chr+= 1
 
+
 # Assigns contents to variable
 def assign():
     global chr
-    
+
     varname = re.findall(r'^([a-zA-z0-9]+)\s+?=', src[chr:])[0]
     chr += len(varname)
     squeeze()
@@ -49,7 +50,8 @@ def assign():
         chr+= 1 
         while src[chr] != '\'':
             varcontent += src[chr]
-            chr+=1            
+            chr+=1  
+                        
         chr+=1
         variables[varname] = varcontent
         
@@ -60,6 +62,24 @@ def assign():
 
         #added eval so that it can add when assigned 
         variables[varname] = eval(varcontent)    
+    
+   
+   #lets you set a variable to another variable's value
+   #it doesn't let you do any operations on the values yet 
+    if src[chr] in '[a-zA-Z]':   
+        value = 0
+        while src[chr] != '\n':
+            varcontent += src[chr]
+            chr+=1
+
+            for x in variables:
+                if(varcontent == x):
+                    value += variables[varcontent]
+                    varcontent = ''
+
+        #added eval so that it can add when assigned 
+        variables[varname] = value 
+
     
     squeeze()
  
@@ -86,6 +106,35 @@ def printer():
         quit()
 
 
+
+
+#started the if condition 
+def ifcondition():
+    global chr
+    
+    chr += 2
+    squeeze()
+    chr += 1
+    condition = ''
+    
+    
+    while src[chr] != ')':
+        condition += src[chr]
+        chr += 1
+
+    
+    
+    chr += 1
+    squeeze()
+    if eval(condition):
+        print("true")
+        #needs a way to be able to read the lines following the if statement and ignore the else lines
+        
+    else:
+        print("untrue")
+        #same as if 
+
+
 #Reader for input file
 while chr < len(src):
     if src[chr:].startswith('#'):
@@ -99,3 +148,8 @@ while chr < len(src):
     if re.match(r'^print\s*\(', src[chr:]):
         printer()
         continue
+
+    # if re.match(r'^if\s*\(', src[chr:]):
+    #     ifcondition()
+    #     continue
+
