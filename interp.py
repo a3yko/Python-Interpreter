@@ -16,32 +16,14 @@ src = ''
 #Gets input file and gives source variable the whole file
 with open(sys.argv[1]) as file:
     src = file.read()
-    
-#Reader for input file
-while chr < len(src):
-    if src[chr:].startswith('#'):
-        comment()
-        continue
-    
-    if re.math(r'^([a-zA-z0-9]+)\s+?=', src[chr:]):
-        assign()
-        continue
-    
-    if re.match(r'^print\s*\(', src[chr:]):
-        printer()
-        continue
-    
-    
+      
 #eats up whitespaces up to the new line
 def squeeze():
     global chr
     
-    while chr < len(src) and src[chr] != '\n':
+    while chr < len(src) and src[chr] in [' ', '\t', '\n']:
         chr += 1
-    
-    chr += 1
-       
-       
+           
     
  ## function that ignores comments when it finds them in the code   
 def comment():
@@ -50,9 +32,6 @@ def comment():
         chr += 1
     
     chr+= 1
-
-
-
 
 # Assigns contents to variable
 def assign():
@@ -74,17 +53,16 @@ def assign():
         chr+=1
         variables[varname] = varcontent
         
-    if src[chr] in ['0','1','2','3','4','5','6','7','8','9']:
+    if src[chr] in ['0','1','2','3','4','5','6','7','8','9']:   
         while src[chr] != '\n':
             varcontent += src[chr]
-            chr+=1      
-        variables[varname] = int(varcontent)      
-        
+            chr+=1 
+
+        #added eval so that it can add when assigned 
+        variables[varname] = eval(varcontent)    
+    
     squeeze()
-    
-    
-    
-    
+ 
  #this is the print function   
 def printer():
     global chr
@@ -103,7 +81,21 @@ def printer():
     
     try:
         print(variables[varname])
-    else:
-        print("Unknown Variabale:" + varname)
+    except:
+        print('unknown variable: %s' % varname)
+        quit()
+
+
+#Reader for input file
+while chr < len(src):
+    if src[chr:].startswith('#'):
+        comment()
+        continue
     
-    pass
+    if re.match(r'^([a-zA-z0-9]+)\s+?=', src[chr:]):
+        assign()
+        continue
+    
+    if re.match(r'^print\s*\(', src[chr:]):
+        printer()
+        continue
