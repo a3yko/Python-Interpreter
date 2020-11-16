@@ -86,10 +86,87 @@ def printer():
         quit()
 
 
+def conditions():
+    global chr
+
+    var1 = re.findall(r'^([a-zA-Z0-9]+)\s+?[==|!=|<|<=|>|>=]', src[chr:])[0]
+    condition = re.findall(r'(==|!=|>=|<=|>|<)', src[chr:])[0]
+    var2 = re.findall(r'[==|!=|<|<=|>|>=]\s+([a-zA-Z0-9]+)', src[chr:])[0]
+
+    chr += len(var1)
+    squeeze()
+    chr += len(condition)
+    squeeze()
+    chr += len(var2)
+    squeeze()
+    
+
+    # make sure the varaible is in the list 
+    if (var1 in variables) and ((var2 in variables) or (var2.isdigit())):
+        if condition == "==":
+            return variables[var1] == variables[var2] if (var2 in variables) else int(var2)
+        if condition == "!=":
+            return variables[var1] != variables[var2] if (var2 in variables) else int(var2)
+        if condition == ">=":
+            return variables[var1] >= variables[var2] if (var2 in variables) else int(var2)
+        if condition == "<=":
+            return variables[var1] <= variables[var2] if (var2 in variables) else int(var2)
+        if condition == ">":
+            return variables[var1] > variables[var2] if (var2 in variables) else int(var2)
+        if condition == "<":
+            return variables[var1] < variables[var2] if (var2 in variables) else int(var2)
+
+    else:
+        print("this is not a condition")
+        quit()
+
+
+def if_else_block():
+    global chr
+
+    # skip if
+    chr += 2
+    squeeze()
+
+    condition = conditions()
+
+    if_statement = re.findall(r'^:\s+?([a-zA-Z0-9()"]+)\s+?else:', src[chr:])[0]
+
+    # skip colon
+    chr += 1
+
+    squeeze()
+    chr += len(if_statement)
+    squeeze()
+
+    # skip else
+    chr += 4
+    else_statement = re.findall(r'^:\s+([a-zA-Z0-9()\s"~!@`$%^&*_+-=:;]+)\s+?', src[chr:])[0]
+
+    #skip colon
+    chr += 1
+    squeeze()
+    chr += len(else_statement)
+    squeeze()
+
+    if condition:
+        eval(if_statement)
+    else:
+        eval(else_statement)
+
+
 #Reader for input file
 while chr < len(src):
     if src[chr:].startswith('#'):
         comment()
+        continue
+
+    if re.match(r'^([a-zA-Z0-9]+)\s+?==|!=|<|<=|>|>=', src[chr:]):
+        print(conditions())
+        continue
+
+    if re.match(r'^if\s+?', src[chr:]):
+        if_else_block()
         continue
     
     if re.match(r'^([a-zA-z0-9]+)\s+?=', src[chr:]):
@@ -99,3 +176,5 @@ while chr < len(src):
     if re.match(r'^print\s*\(', src[chr:]):
         printer()
         continue
+
+    chr += 1
