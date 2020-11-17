@@ -42,7 +42,7 @@ def assign():
     squeeze()
     chr+= 1
     squeeze()
-    
+
     varcontent = ''
     
     if src[chr] == '\'':
@@ -53,25 +53,75 @@ def assign():
             chr+=1            
         chr+=1
         variables[varname] = varcontent
-        
+
+    #allows you to assign to numbers but also have it so you can assign a variable
     if src[chr] in ['0','1','2','3','4','5','6','7','8','9']:   
-        while src[chr] != '\n':
-            varcontent += src[chr]
-            chr+=1 
-
-        #added eval so that it can add when assigned 
-        variables[varname] = eval(varcontent)    
-
-
-     #lets you set a variable to another variable's value
-     #also does operations on the variables
-    
-    if src[chr] in '[a-zA-Z]':   
         value = ""
         while src[chr] != '\n':
             varcontent += src[chr]
-            chr+=1        
             
+            chr+=1        
+            for x in variables:
+                if(varcontent == x):
+                    value += str(variables[varcontent])
+                    chr+=1   
+                    varcontent = ''
+                    varcontent += src[chr]
+                    if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        chr-=1
+                        
+                        value+= '\n'
+                    varcontent = ''
+                    
+                        
+            if(varcontent == '+'):
+                value+= '+'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '-'):
+                value+= '-'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '*'):
+                value+= '*'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '/'):
+                value+= '/'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '%'):
+                value+= '%'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '^'):
+                value+= '^'
+                varcontent = ''
+                chr+=1
+            elif(varcontent in ['0','1','2','3','4','5','6','7','8','9']):
+                value+= str(varcontent)
+                varcontent = '' 
+                chr+=1
+                varcontent += src[chr]
+                if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        chr-=1
+                        value+= '\n'
+                varcontent = '' 
+                
+
+        #added eval so that it can add when assigned 
+        variables[varname] = eval(value)   
+  
+    squeeze()
+     #lets you set a variable to another variable's value
+     #also does operations on the variables
+    
+    if src[chr] in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']:   
+        value = ""
+        while src[chr] != '\n':
+            
+            varcontent += src[chr]
+            chr+=1        
             for x in variables:
                 if(varcontent == x):
                     value += str(variables[varcontent])
@@ -113,10 +163,13 @@ def assign():
                 value+= str(varcontent)
                 varcontent = '' 
                 chr+=1
-                if(varcontent in '[a-zA-Z]'):
-                    chr-=1
-                    value+= '\n'
-            
+                varcontent += src[chr]
+                if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        value+= '\n'
+                varcontent = '' 
+                chr-=1
+                
+
         #added eval so that it can add when assigned 
         variables[varname] = eval(value)
 
@@ -138,7 +191,7 @@ def printer():
         
     chr += 1
     squeeze()
-    
+ 
     try:
         print(variables[varname])
     except:
