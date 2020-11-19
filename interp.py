@@ -212,36 +212,32 @@ def printer():
 def conditions():
     global chr
 
+    # get varaibles and condiition
     var1 = re.findall(r'^([a-zA-Z0-9]+)\s+?[==|!=|<|<=|>|>=]', src[chr:])[0]
     condition = re.findall(r'(==|!=|>=|<=|>|<)', src[chr:])[0]
     var2 = re.findall(r'[==|!=|<|<=|>|>=]\s+([a-zA-Z0-9]+)', src[chr:])[0]
 
+    # skip var1
     chr += len(var1)
     squeeze()
+
+    # skip condition
     chr += len(condition)
     squeeze()
+
+    # skip var2
     chr += len(var2)
     squeeze()
-    
 
-    # make sure the varaible is in the list 
-    if (var1 in variables) and ((var2 in variables) or (var2.isdigit())):
-        if condition == "==":
-            return variables[var1] == variables[var2] if (var2 in variables) else int(var2)
-        if condition == "!=":
-            return variables[var1] != variables[var2] if (var2 in variables) else int(var2)
-        if condition == ">=":
-            return variables[var1] >= variables[var2] if (var2 in variables) else int(var2)
-        if condition == "<=":
-            return variables[var1] <= variables[var2] if (var2 in variables) else int(var2)
-        if condition == ">":
-            return variables[var1] > variables[var2] if (var2 in variables) else int(var2)
-        if condition == "<":
-            return variables[var1] < variables[var2] if (var2 in variables) else int(var2)
 
-    else:
-        print("this is not a condition")
-        quit()
+    # if it is a variable (not digit), then retreive the variable from variables dic
+    if var1 in variables:
+        var1 = variables[var1]
+    if var2 in variables:
+        var2 = variables[var2]
+
+    # use eval to execute the statement
+    return eval(str(var1) + condition + str(var2))
 
 
 def if_else_block():
@@ -283,7 +279,7 @@ while chr < len(src):
         comment()
         continue
 
-    if re.match(r'^([a-zA-Z0-9]+)\s+?==|!=|<|<=|>|>=', src[chr:]):
+    if re.match(r'^[a-zA-Z0-9]+\s+?(>=|<=|>|<|!=|==)', src[chr:]):
         print(conditions())
         continue
 
