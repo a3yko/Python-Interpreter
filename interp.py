@@ -42,7 +42,7 @@ def assign():
     squeeze()
     chr+= 1
     squeeze()
-    
+
     varcontent = ''
     
     if src[chr] == '\'':
@@ -53,25 +53,75 @@ def assign():
             chr+=1            
         chr+=1
         variables[varname] = varcontent
-        
+
+    #allows you to assign to numbers but also have it so you can assign a variable
     if src[chr] in ['0','1','2','3','4','5','6','7','8','9']:   
-        while src[chr] != '\n':
-            varcontent += src[chr]
-            chr+=1 
-
-        #added eval so that it can add when assigned 
-        variables[varname] = eval(varcontent)    
-
-
-     #lets you set a variable to another variable's value
-     #also does operations on the variables
-    
-    if src[chr] in '[a-zA-Z]':   
         value = ""
         while src[chr] != '\n':
             varcontent += src[chr]
-            chr+=1        
             
+            chr+=1        
+            for x in variables:
+                if(varcontent == x):
+                    value += str(variables[varcontent])
+                    chr+=1   
+                    varcontent = ''
+                    varcontent += src[chr]
+                    if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        chr-=1
+                        
+                        value+= '\n'
+                    varcontent = ''
+                    
+                        
+            if(varcontent == '+'):
+                value+= '+'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '-'):
+                value+= '-'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '*'):
+                value+= '*'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '/'):
+                value+= '/'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '%'):
+                value+= '%'
+                varcontent = ''
+                chr+=1
+            elif(varcontent == '^'):
+                value+= '^'
+                varcontent = ''
+                chr+=1
+            elif(varcontent in ['0','1','2','3','4','5','6','7','8','9']):
+                value+= str(varcontent)
+                varcontent = '' 
+                chr+=1
+                varcontent += src[chr]
+                if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        chr-=1
+                        value+= '\n'
+                varcontent = '' 
+                
+
+        #added eval so that it can add when assigned 
+        variables[varname] = eval(value)   
+  
+    squeeze()
+     #lets you set a variable to another variable's value
+     #also does operations on the variables
+    
+    if src[chr] in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']:   
+        value = ""
+        while src[chr] != '\n':
+            
+            varcontent += src[chr]
+            chr+=1        
             for x in variables:
                 if(varcontent == x):
                     value += str(variables[varcontent])
@@ -113,10 +163,13 @@ def assign():
                 value+= str(varcontent)
                 varcontent = '' 
                 chr+=1
-                if(varcontent in '[a-zA-Z]'):
-                    chr-=1
-                    value+= '\n'
-            
+                varcontent += src[chr]
+                if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
+                        value+= '\n'
+                varcontent = '' 
+                chr-=1
+                
+
         #added eval so that it can add when assigned 
         variables[varname] = eval(value)
 
@@ -138,7 +191,7 @@ def printer():
         
     chr += 1
     squeeze()
-    
+ 
     try:
         print(variables[varname])
     except:
@@ -149,36 +202,32 @@ def printer():
 def conditions():
     global chr
 
+    # get varaibles and condiition
     var1 = re.findall(r'^([a-zA-Z0-9]+)\s+?[==|!=|<|<=|>|>=]', src[chr:])[0]
     condition = re.findall(r'(==|!=|>=|<=|>|<)', src[chr:])[0]
     var2 = re.findall(r'[==|!=|<|<=|>|>=]\s+([a-zA-Z0-9]+)', src[chr:])[0]
 
+    # skip var1
     chr += len(var1)
     squeeze()
+
+    # skip condition
     chr += len(condition)
     squeeze()
+
+    # skip var2
     chr += len(var2)
     squeeze()
-    
 
-    # make sure the varaible is in the list 
-    if (var1 in variables) and ((var2 in variables) or (var2.isdigit())):
-        if condition == "==":
-            return variables[var1] == variables[var2] if (var2 in variables) else int(var2)
-        if condition == "!=":
-            return variables[var1] != variables[var2] if (var2 in variables) else int(var2)
-        if condition == ">=":
-            return variables[var1] >= variables[var2] if (var2 in variables) else int(var2)
-        if condition == "<=":
-            return variables[var1] <= variables[var2] if (var2 in variables) else int(var2)
-        if condition == ">":
-            return variables[var1] > variables[var2] if (var2 in variables) else int(var2)
-        if condition == "<":
-            return variables[var1] < variables[var2] if (var2 in variables) else int(var2)
 
-    else:
-        print("this is not a condition")
-        quit()
+    # if it is a variable (not digit), then retreive the variable from variables dic
+    if var1 in variables:
+        var1 = variables[var1]
+    if var2 in variables:
+        var2 = variables[var2]
+
+    # use eval to execute the statement
+    return eval(str(var1) + condition + str(var2))
 
 
 def if_else_block():
@@ -221,7 +270,7 @@ while chr < len(src):
         comment()
         continue
 
-    if re.match(r'^([a-zA-Z0-9]+)\s+?==|!=|<|<=|>|>=', src[chr:]):
+    if re.match(r'^[a-zA-Z0-9]+\s+?(>=|<=|>|<|!=|==)', src[chr:]):
         print(conditions())
         continue
 
