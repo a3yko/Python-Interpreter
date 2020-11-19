@@ -42,13 +42,24 @@ def assign():
     squeeze()
     chr+= 1
     squeeze()
-
     varcontent = ''
     
     if src[chr] == '\'':
         chr+= 1 
+        squeeze()
         value = ""
         while src[chr] != '\'':
+            varcontent += src[chr]
+            chr+=1            
+        chr+=1
+        variables[varname] = varcontent
+
+    #allows for double quotes
+    if src[chr] == '\"':
+        chr+= 1 
+        squeeze()
+        value = ""
+        while src[chr] != '\"':
             varcontent += src[chr]
             chr+=1            
         chr+=1
@@ -57,10 +68,10 @@ def assign():
     #allows you to assign to numbers but also have it so you can assign a variable
     if src[chr] in ['0','1','2','3','4','5','6','7','8','9']:   
         value = ""
+        
         while src[chr] != '\n':
             varcontent += src[chr]
-            
-            chr+=1        
+            squeeze()
             for x in variables:
                 if(varcontent == x):
                     value += str(variables[varcontent])
@@ -73,9 +84,8 @@ def assign():
                         value+= '\n'
                     varcontent = ''
                     
-                        
             if(varcontent == '+'):
-                value+= '+'
+                value+='+'
                 varcontent = ''
                 chr+=1
             elif(varcontent == '-'):
@@ -99,42 +109,41 @@ def assign():
                 varcontent = ''
                 chr+=1
             elif(varcontent in ['0','1','2','3','4','5','6','7','8','9']):
-                value+= str(varcontent)
+                value+= varcontent
                 varcontent = '' 
                 chr+=1
-                varcontent += src[chr]
+                varcontent = src[chr]
+
                 if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
                         chr-=1
                         value+= '\n'
                 varcontent = '' 
-                
 
         #added eval so that it can add when assigned 
-        variables[varname] = eval(value)   
+        if (isinstance(value, int) == int):
+            variables[varname] = eval(value)
+        else:
+            variables[varname] = value   
   
     squeeze()
      #lets you set a variable to another variable's value
      #also does operations on the variables
-    
     if src[chr] in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']:   
         value = ""
+        
         while src[chr] != '\n':
-            
-            varcontent += src[chr]
-            chr+=1        
+            varcontent = src[chr]
+            squeeze()
+
             for x in variables:
                 if(varcontent == x):
                     value += str(variables[varcontent])
                     chr+=1   
-                    varcontent = ''
-                    varcontent += src[chr]
-            
+                    varcontent = str(src[chr])
                     if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
                         chr-=1
                         value+= '\n'
-                    varcontent = ''
-                    
-                        
+      
             if(varcontent == '+'):
                 value+= '+'
                 varcontent = ''
@@ -166,12 +175,13 @@ def assign():
                 varcontent += src[chr]
                 if(varcontent in ['a','b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']):
                         value+= '\n'
+                        chr-=1
                 varcontent = '' 
-                chr-=1
-                
-
-        #added eval so that it can add when assigned 
-        variables[varname] = eval(value)
+            
+        if (isinstance(value, int) == int):
+            variables[varname] = eval(value)
+        else:
+            variables[varname] = value
 
     
     squeeze()
@@ -251,7 +261,6 @@ def if_else_block():
     squeeze()
     chr += len(if_statement)
     squeeze()
-
     # skip else
     chr += 4
     else_statement = re.findall(r'^:\s+([a-zA-Z0-9()\s"~!@`$%^&*_+-=:;]+)\s+?', src[chr:])[0]
