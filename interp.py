@@ -189,28 +189,62 @@ def if_else_block():
 
     condition = conditions()
 
-    if_statement = re.findall(r'^:\s+?([a-zA-Z0-9()"]+)\s+?else:', src[chr:])[0]
-
     # skip colon
     chr += 1
 
-    squeeze()
-    chr += len(if_statement)
-    squeeze()
-    # skip else
-    chr += 4
-    else_statement = re.findall(r'^:\s+([a-zA-Z0-9()\s"~!@`$%^&*_+-=:;]+)\s+?', src[chr:])[0]
+    #### if statement
 
-    #skip colon
-    chr += 1
-    squeeze()
-    chr += len(else_statement)
-    squeeze()
+    # skip \n
+    chr+=1
+
+    if_statement = ""
+
+    line = ""
+    while src[chr] != '\n':
+        line+=src[chr]
+        chr+=1
+
+    indent = len(line) - len(line.lstrip())
+
+
+    while (len(line) - len(line.lstrip())) == indent:
+        if_statement += line.lstrip() + "\n"
+        chr+=1
+        line = ""
+        while src[chr] != '\n':
+            line+=src[chr]
+            chr+=1
+
+
+    #### else statement
+
+    else_statement = ""
+
+    chr+=1
+
+    line = ""
+    while src[chr] != '\n':
+        line+=src[chr]
+        chr+=1
+
+    indent = len(line) - len(line.lstrip())
+
+    while (len(line) - len(line.lstrip())) == indent:
+        else_statement += line.lstrip() + "\n"
+        chr+=1
+        line = ""
+        while src[chr] != '\n':
+            line+=src[chr]
+            chr+=1
+
+            
 
     if condition:
-        eval(if_statement)
+        exec(if_statement)
     else:
-        eval(else_statement)
+        exec(else_statement)
+
+
 
 #used for assignment operators. does not handle regular assignment
 def assignment_operators():
