@@ -1,12 +1,12 @@
 # Python-Interpreter
 
 ## Team Members <br>
-Adrian Atanasov
-Lauren Cochran
-Kai Hua Lin
-Collin Pounds
-Tarek Elbendary
-Deodat, Kimuene
+Adrian Atanasov<br>
+Lauren Cochran<br>
+Kai Hua Lin<br>
+Collin Pounds<br>
+Tarek Elbendary<br>
+Deodat, Kimuene<br>
 
 to run use the command line and type: python interp.py 'file' where file has the python code you want to interpret 
 
