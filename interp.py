@@ -276,6 +276,49 @@ def assignment_operators():
     variables[varname] = value
     squeeze()
 
+def while_loop():
+    global chr
+ 
+    #skip while
+    chr += 5
+    squeeze()
+ 
+    #sets variable condition using conditions function
+    while_condition = conditions()
+ 
+    #skip colon
+    chr += 1
+    squeeze()
+ 
+    #while statement
+ 
+    #skip new line character
+    chr += 1
+    squeeze()
+ 
+    #initialize while statment string and line variable string
+    while_statement = ''
+    while_line = ''
+ 
+    while src[chr] != '\n':
+        while_line += src[chr]
+        #skip new line character
+        chr += 1
+ 
+    indent = len(while_line) - len(while_line.lstrip())
+ 
+    while (len(while_line) - len(while_line.lstrip())) == indent:
+        while_statement += while_line.lstrip() + '\n'
+        chr += 1
+        while_line = ''
+        while src[chr] != '\n':
+            while_line += src[chr]
+            #skip newline character
+            chr += 1
+ 
+    while while_condition:
+        exec(while_statement)
+
 #Reader for input file
 while chr < len(src):
     if src[chr:].startswith('#'):
@@ -290,6 +333,10 @@ while chr < len(src):
         if_else_block()
         continue
     
+    if re.match(r'^while\s+?', src[chr:]):
+        while_loop()
+        continue
+
     if re.match(r'^([a-zA-z0-9]+)\s+?=', src[chr:]):
         assign()
         continue
