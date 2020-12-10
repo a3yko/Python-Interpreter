@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import operator
 
 
 #This checks if there is an appropriate input file present in the system arguments
@@ -129,26 +130,74 @@ def assign():
  #this is the print function   
 def printer():
     global chr
+    global variables
     
     chr += 5
     squeeze()
     chr += 1
     varname = ''
+    string = ""
+    num1 = ""
+    op = ""
+    ops = {"+": operator.add, "-": operator.sub, "/": operator.truediv, "*": operator.mul}
+    num2 = ""
+    check = False
     
-    while src[chr] != ')':
-        varname += src[chr]
-        chr += 1
+    if src[chr] in variables:
+        while src[chr] != ')':
+            varname += src[chr]
+            chr += 1
         
-    chr += 1
-    squeeze()
+        chr += 1
+        squeeze()
  
-    try:
-        print(variables[varname])
-    except:
-        print('unknown variable: %s' % varname)
-        quit()
-
-
+        try:
+            print(variables[varname])
+        except:
+            print('unknown variable: %s' % varname)
+            quit()
+    elif src[chr] in ['\"', '\'']:
+        chr += 1
+        while src[chr] not in ['\"', '\'']:
+            string += src[chr]
+            chr +=1
+            
+        chr += 2
+        squeeze()
+ 
+        try:
+            print(string)
+        except:
+            print('not a valid string')
+            quit()
+    elif re.match(r'^[0-9]+$', src[chr]):
+        while src[chr] != ')':
+            if re.match(r'^[0-9]+$', src[chr]):
+                if check == False:
+                    num1 += src[chr]
+                    chr += 1
+                elif check == True:
+                    num2 += src[chr]
+                    chr += 1
+                
+            elif re.match(r'([-+\/*()])', src[chr]):
+                op = src[chr]
+                chr += 1
+                check = True
+            else:
+                print("There is an error in the math expression")
+         
+        chr += 2
+        squeeze()
+ 
+        try:
+            print(ops["+"](int(num1),int(num2)))
+        except:
+            print('not a valid string')
+            quit()
+                
+                
+                
 def conditions():
     global chr
 
@@ -318,6 +367,7 @@ def while_loop():
  
     while while_condition:
         exec(while_statement)
+
 
 #Reader for input file
 while chr < len(src):
