@@ -368,6 +368,72 @@ def while_loop():
     while while_condition:
         exec(while_statement)
 
+def for_loop():
+    global chr
+ 
+    #skip for
+    chr += 3
+    squeeze()
+ 
+    #skip iterable object
+    while src[chr] != ' ':
+        chr += 1
+    squeeze()
+    # skip in statement
+    while src[chr] != ' ':
+        chr += 1
+    squeeze()
+    # grab iterable list
+    for_list_statement = ''
+    while src[chr] != ':':
+        for_list_statement += src[chr]
+        chr += 1
+    # skip colon
+    chr += 1
+
+    count = 0
+    #checks if for list provided is an iterable
+    if 'range' in for_list_statement:
+        while for_list_statement[count] != '(':
+            count += 1
+        # takes whitespace out of first range value if there is one
+        squeeze()
+        first_range_string = ''
+        second_range_string = ''
+        # grabs first range function value
+        while for_list_statement[count] != ',':
+            first_range_string += for_list_statement[count]
+        # skips comma
+        count += 1
+        # takes whitespace out of second range value if there is one
+        squeeze()
+        # grabs second range function value
+        while for_list_statement[count] != ')':
+            second_range_string += for_list_statement[count]
+        # try to convert first value string to an integer
+        try:
+            first_range_value = int(first_range_string)
+        except:
+            print("Error converting first range value to integer.")
+            return
+        
+        # try to convert second value string to an integer  
+        try:
+            second_range_value = int(second_range_string)
+        except:
+            print("Error converting second range value to integer.")
+            return
+    # if for list iterable given not iterable, print error message        
+    else:
+        print("For loop list must be iterable.")
+
+    # grabs block of code to execute for statement
+    for_statement = re.match(r'    ' or '\t+?', src[chr:])
+    squeeze()
+
+    # iterates through loop for a certain number of times
+    for num in range(first_range_value, second_range_value):
+        exec(for_statement)
 
 #Reader for input file
 while chr < len(src):
@@ -385,6 +451,10 @@ while chr < len(src):
     
     if re.match(r'^while\s+?', src[chr:]):
         while_loop()
+        continue
+        
+    if re.match(r'^for\s+?', src[chr:]):
+        for_loop()
         continue
 
     if re.match(r'^([a-zA-z0-9]+)\s+?=', src[chr:]):
