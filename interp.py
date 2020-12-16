@@ -403,6 +403,7 @@ def for_loop():
         # grabs first range function value
         while for_list_statement[count] != ',':
             first_range_string += for_list_statement[count]
+            count += 1
         # skips comma
         count += 1
         # takes whitespace out of second range value if there is one
@@ -410,6 +411,7 @@ def for_loop():
         # grabs second range function value
         while for_list_statement[count] != ')':
             second_range_string += for_list_statement[count]
+            count += 1
         # try to convert first value string to an integer
         try:
             first_range_value = int(first_range_string)
@@ -428,12 +430,29 @@ def for_loop():
         print("For loop list must be iterable.")
 
     # grabs block of code to execute for statement
-    for_statement = re.match(r'    ' or '\t+?', src[chr:])
-    squeeze()
+    for_statement = ""
+    line = ""
+    
+    chr += 1
+    # reads first line of for loop block into line
+    while src[chr] != '\n':
+        line+=src[chr]
+        chr+=1
+    # calculates the indentation of the line
+    indent = len(line) - len(line.lstrip())
+    # reads in line by line by checking the indentation
+    while (len(line) - len(line.lstrip())) == indent:
+        for_statement += line.lstrip() + "\n"
+        chr+=1
+        line = ""
+        while src[chr] != '\n':
+            line+=src[chr]
+            chr+=1
 
     # iterates through loop for a certain number of times
     for num in range(first_range_value, second_range_value):
         exec(for_statement)
+
 
 #Reader for input file
 while chr < len(src):
