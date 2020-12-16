@@ -191,7 +191,7 @@ def printer():
         squeeze()
  
         try:
-            print(ops["+"](int(num1),int(num2)))
+            print(ops[op](int(num1),int(num2)))
         except:
             print('not a valid string')
             quit()
