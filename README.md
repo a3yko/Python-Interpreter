@@ -11,10 +11,10 @@ Deodat, Kimuene<br>
 to run use the command line and type: python interp.py 'file' where file has the python code you want to interpret 
 
 •if/elseblocks **Lines 183-245**<br>
-•Variable definitions **Lines Lines 37-127**<br>
-•while and forLoops<br>
+•Variable definitions **Lines 37-127**<br>
+•while and forLoops<br> **Lines 324-454**<br>
 •Arithmetic operators (+, -, *, /, %, ^)<br>
-•Assignment operators (=, +=, -=, *=, /=, ^=, %=) **250-277**<br>
+•Assignment operators (=, +=, -=, *=, /=, ^=, %=) **Lines 250-277**<br>
 •Conditional statements (<, <=, >, >=, ==, !=) **Lines 152-180**<br>
 •Comments (lines that start with a ‘#’) **Lines 28-34**<br>
 •Support Output operation (printfunction) **Lines 130-149**<br>
