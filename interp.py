@@ -3,7 +3,6 @@ import sys
 import re
 import operator
 
-
 #This checks if there is an appropriate input file present in the system arguments
 if len(sys.argv) < 2:
     print('you must supply an input file')
@@ -17,7 +16,10 @@ src = ''
 #Gets input file and gives source variable the whole file
 with open(sys.argv[1]) as file:
     src = file.read()
-      
+
+# The following documentation was used to complete this function
+# https://github.com/engineer-man/youtube/blob/master/stream006/interpreter.py
+# https://www.youtube.com/watch?v=9MP3sr6Web0&ab_channel=EngineerMan  
 #eats up whitespaces up to the new line
 def squeeze():
     global chr
@@ -25,7 +27,10 @@ def squeeze():
     while chr < len(src) and src[chr] in [' ', '\t']:
         chr += 1
            
-    
+
+# The following documentation was used to complete this function
+# https://github.com/engineer-man/youtube/blob/master/stream006/interpreter.py
+# https://www.youtube.com/watch?v=9MP3sr6Web0&ab_channel=EngineerMan
  ## function that ignores comments when it finds them in the code   
 def comment():
     global chr 
