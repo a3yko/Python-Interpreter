@@ -13,9 +13,9 @@ to run use the command line and type: python interp.py 'file' where file has the
 •if/elseblocks **Lines 183-245**<br>
 •Variable definitions **Lines 37-127**<br>
 •while and forLoops **Lines 324-454**<br>
-•Arithmetic operators (+, -, *, /, %, ^)<br> 
+•Arithmetic operators (+, -, *, /, %, ^)<br> **Lines 173-189** 
 •Assignment operators (=, +=, -=, *=, /=, ^=, %=) **Lines 250-277**<br>
 •Conditional statements (<, <=, >, >=, ==, !=) **Lines 152-180**<br>
 •Comments (lines that start with a ‘#’) **Lines 28-34**<br>
-•Support Output operation (printfunction) **Lines 130-149**<br>
+•Support Output operation (printfunction) **Lines 131-197**<br>
 •BONUS:Syntax error message(this is where we did the accept/reject string. If the given codeaka. grammar is not a Python language, reject it. In other words, throw a syntax error message).<br>
